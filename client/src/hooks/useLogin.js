@@ -2,14 +2,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/authContext";
 
-function useSignUp() {
+function useLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [inputs, setInputs] = useState({
-    fullname: "",
     username: "",
     password: "",
-    passwordConfirm: "",
-    gender: "female",
   });
   const { setUser } = useAuth();
 
@@ -19,27 +16,20 @@ function useSignUp() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    handleSignUp();
+    handleLogin();
   }
 
-  async function handleSignUp() {
-    const { fullname, username, password, passwordConfirm, gender } = inputs;
+  async function handleLogin() {
+    const { username, password } = inputs;
 
-    if (!fullname || !username || !password || !passwordConfirm || !gender) {
+    if (!username || !password) {
       toast.error("Please fill in all he fields!");
       return;
     }
-    if (password !== passwordConfirm) {
-      toast.error("Passwords do not match!");
-      return;
-    }
-    if (password.length < 8) {
-      toast.error("Password must be atleast of 8 characters!");
-      return;
-    }
+
     setIsLoading(true);
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,11 +45,8 @@ function useSignUp() {
       localStorage.setItem("chatapp", data.userId);
       setUser(data.userId);
       setInputs({
-        fullname: "",
         username: "",
         password: "",
-        passwordConfirm: "",
-        gender: "female",
       });
     } catch (error) {
       toast.error(error.message);
@@ -70,4 +57,4 @@ function useSignUp() {
   return { handleInputs, handleSubmit, inputs, isLoading };
 }
 
-export default useSignUp;
+export default useLogin;
