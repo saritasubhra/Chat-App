@@ -19,12 +19,15 @@ const generateAndSendToken = (res, id) => {
 const signUp = async (req, res, next) => {
   try {
     const { fullname, username, gender, password, passwordConfirm } = req.body;
+
+    const profilePic = `https://avatar.iran.liara.run/public/${gender === "male" ? "boy" : "girl"}?username=${username}`;
     const newUser = await User.create({
       fullname,
       username,
       gender,
       password,
       passwordConfirm,
+      profilePic,
     });
 
     generateAndSendToken(res, newUser._id);
@@ -64,6 +67,14 @@ const logIn = async (req, res, next) => {
   }
 };
 
+const logOut = (req, res) => {
+  res.cookie("jwt", "", { maxAge: 0 });
+  res.status(200).json({
+    status: "success",
+    message: "logged out successfully",
+  });
+};
+
 const protect = async (req, res, next) => {
   try {
     const { jwt: token } = req.cookies;
@@ -98,4 +109,4 @@ const restrictTo =
     next();
   };
 
-module.exports = { signUp, logIn, protect, restrictTo };
+module.exports = { signUp, logIn, protect, restrictTo, logOut };
