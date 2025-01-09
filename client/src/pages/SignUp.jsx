@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import useSignUp from "../hooks/useSignUp";
 
 function SignUp() {
-  const { inputs, handleInputs, handleSubmit } = useSignUp();
+  const { inputs, handleInputs, handleSubmit, isLoading } = useSignUp();
 
   return (
     <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
@@ -78,8 +78,15 @@ function SignUp() {
           </Link>
 
           <div>
-            <button className="btn btn-block btn-sm mt-2 border border-slate-700">
-              Sign Up
+            <button
+              className="btn btn-block btn-sm mt-2 border border-slate-700"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </div>
         </form>

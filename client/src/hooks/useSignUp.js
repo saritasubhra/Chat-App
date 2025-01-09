@@ -1,7 +1,9 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/authContext";
 
 function useSignUp() {
+  const [isLoading, setIsLoading] = useState(false);
   const [inputs, setInputs] = useState({
     fullname: "",
     username: "",
@@ -9,6 +11,7 @@ function useSignUp() {
     passwordConfirm: "",
     gender: "female",
   });
+  const { setUser } = useAuth();
 
   function handleInputs(e) {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -34,6 +37,7 @@ function useSignUp() {
       toast.error("Password must be atleast of 8 characters!");
       return;
     }
+    setIsLoading(true);
     try {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
@@ -46,9 +50,11 @@ function useSignUp() {
       console.log(data);
 
       if (!res.ok) {
-        throw new Error("Failed to signup user");
+        throw new Error(data.message);
       }
       toast.success(data.message);
+      localStorage.setItem("chatapp", data.userId);
+      setUser(data.userId);
       setInputs({
         fullname: "",
         username: "",
@@ -58,9 +64,11 @@ function useSignUp() {
       });
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   }
-  return { handleInputs, handleSubmit, inputs };
+  return { handleInputs, handleSubmit, inputs, isLoading };
 }
 
 export default useSignUp;
