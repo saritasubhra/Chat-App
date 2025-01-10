@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 function Conversations() {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectd, setSelected] = useState();
 
   useEffect(() => {
     fetchUsersForSidebar();
@@ -32,12 +31,7 @@ function Conversations() {
   return (
     <div className="py-2 flex flex-col overflow-auto">
       {users.map((user) => (
-        <Conversation
-          key={user._id}
-          user={user}
-          setSelected={setSelected}
-          selectd={selectd}
-        />
+        <Conversation key={user._id} user={user} />
       ))}
       {isLoading ? (
         <span className="loading loading-spinner mx-auto"></span>
