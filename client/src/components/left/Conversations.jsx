@@ -20,7 +20,6 @@ function Conversations() {
         throw new Error(data.message);
       }
       setUsers(data.data);
-      console.log(data);
     } catch (error) {
       toast.error(error.message);
     } finally {
