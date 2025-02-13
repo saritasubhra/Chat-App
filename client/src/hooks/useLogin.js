@@ -42,8 +42,8 @@ function useLogin() {
         throw new Error(data.message);
       }
       toast.success(data.message);
-      localStorage.setItem("chatapp", data.userId);
-      setAuth(data.userId);
+      localStorage.setItem("chatapp", JSON.stringify(data.data));
+      setAuth(data.data);
       setInputs({
         username: "",
         password: "",
