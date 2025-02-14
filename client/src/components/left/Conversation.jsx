@@ -1,10 +1,10 @@
-/* eslint-disable react/prop-types */
-
 import { useEffect } from "react";
 import { useConversation } from "../../context/ConversationContext";
+import { useSocket } from "../../context/SocketContext";
 
 function Conversation({ user }) {
   const { selectedUser, setSelectedUser } = useConversation();
+  const { onlineUsers } = useSocket();
 
   useEffect(() => {
     return () => setSelectedUser(null);
@@ -12,6 +12,7 @@ function Conversation({ user }) {
   }, []);
 
   const { username, profilePic, _id } = user;
+  const isOnline = onlineUsers.includes(_id);
 
   return (
     <>
@@ -21,7 +22,7 @@ function Conversation({ user }) {
         }`}
         onClick={() => setSelectedUser(user)}
       >
-        <div className="avatar online">
+        <div className={`avatar ${isOnline ? "online" : ""}`}>
           <div className="w-12 rounded-full">
             <img src={profilePic} alt={username} />
           </div>
