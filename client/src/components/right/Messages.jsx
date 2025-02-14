@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import Message from "./Message";
 import { useConversation } from "../../context/ConversationContext";
 import toast from "react-hot-toast";
+import { useSocket } from "../../context/SocketContext";
 
 function Messages() {
   const { selectedUser, messages, setMessages } = useConversation();
+  const { socket } = useSocket();
 
   useEffect(() => {
     async function fetchMessages() {
@@ -22,6 +24,12 @@ function Messages() {
     fetchMessages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser]);
+
+  useEffect(() => {
+    socket.on("send-message", (data) => {
+      setMessages((prev) => [...prev, data]);
+    });
+  }, [socket, setMessages]);
 
   return (
     <div className="px-4 flex-1 overflow-auto">
